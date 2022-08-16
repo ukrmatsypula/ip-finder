@@ -2,7 +2,7 @@ import "babel-polyfill";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
-import { addTileLayer, getAddress, validateIp } from "./helpers";
+import { addTileLayer, addOffset, getAddress, validateIp } from "./helpers";
 import icon from "../images/icon-location.svg";
 
 const ipInput = document.querySelector(".search-bar__input");
@@ -31,6 +31,9 @@ L.marker([51.505, -0.09], { icon: markerIcon }).addTo(map);
 
 btn.addEventListener("click", getData);
 ipInput.addEventListener("keydown", handleKey);
+document.addEventListener("DOMContentLoaded", () => {
+  getAddress("102.22.22.1").then(setInfo);
+});
 
 function getData() {
   if (validateIp(ipInput.value)) {
@@ -54,4 +57,8 @@ function setInfo(mapData) {
 
   map.setView([lat, lng]);
   L.marker([lat, lng], { icon: markerIcon }).addTo(map);
+
+  if (matchMedia("(max-width: 1023px)").matches) {
+    addOffset(map);
+  }
 }
